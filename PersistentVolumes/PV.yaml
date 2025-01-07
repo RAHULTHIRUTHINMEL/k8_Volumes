@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany            #pods are on diff nodes
+  local:                       #type of PV as we use in minikube, see descr. 
+    path: /storage/data
+  nodeAffinity:    #on which node the data should be stored when we have multiple nodes in cluster
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube     #node name
